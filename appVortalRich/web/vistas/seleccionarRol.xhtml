@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:head>
+        <title>Seleccionar Rol</title>
+    </h:head>
+    <h:body>
+        <h:form id="formSeleccionarRol">
+            <br/><br/><br/><br/><br/><br/><br/><br/>
+            <center>
+                <rich:panel style="text-align:center; width: 430px; align-content: center; ">
+                    <a4j:outputPanel id="outputPanelSeleccionarRol" 
+                                     style="text-align:center; width: 430px; align-content: center; ">
+
+                        <h:panelGrid  columns="1" cellpadding="2" style="text-align: center;">
+                            <f:facet name="header">
+                                <p:messages id="msgs"/>
+                            </f:facet>
+                            <h:outputLabel for="selectOneMenuSeleccionarRol" value="Seleccione el rol con el que desea ingresar: "/>
+                            <rich:select id="selectOneMenuSeleccionarRol" style="width:155px"     
+                                         required="true" requiredMessage="Seleccione un Rol"
+                                         value="#{usuariorolControl.nombreRolSeleccionado}">
+
+                                <f:selectItem itemLabel="Seleccione un Rol" itemValue="" 
+                                              noSelectionOption="true" />
+                                <f:selectItems var="usurol" value="#{usuariorolControl.rolesDelUsuario}"
+                                               itemLabel="#{usurol.rol.rolNombre}" itemValue="#{usurol.rol.rolNombre}"/>
+
+                                <a4j:ajax listener="#{usuariorolControl.actualizaRolSeleccionado}" event="change"/>
+                            </rich:select>
+
+                            <f:facet name="footer">
+                                <p:separator/>
+                                <a4j:commandButton value="Continuar" 
+                                                   id="btnContinuarSesion"
+                                                   style="width: 80px; height: 30px; text-align: center; font-weight: bold"                                             
+                                                   action="#{usuariorolControl.cargarInicio()}"/>&nbsp;
+                                <a4j:commandButton value="Cerrar Sesion"  
+                                                   id="btnCancelarContinuarSesion" 
+                                                   style="width: 90px; height: 30px; text-align: center; font-weight: bold"                                             
+                                                   actionListener="#{loginControl.cerrarSesion()}"/>
+                            </f:facet>
+                        </h:panelGrid>
+
+                    </a4j:outputPanel>
+                </rich:panel>
+            </center>
+        </h:form>
+    </h:body>
+</html>
+
+
+

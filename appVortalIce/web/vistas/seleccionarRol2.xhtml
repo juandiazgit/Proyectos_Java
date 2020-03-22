@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    
+     <h:head>
+        <title>Seleccionar Rol</title>
+    </h:head>
+    <h:body>
+        <h:form id="formSeleccionarRol">
+
+            <ace:dialog header="Seleccionar Rol" id="dialogSeleccionarRol" modal="true" showEffect="fade" 
+                      hideEffect="explode" resizable="false"  closable="false" style="text-align: center;">
+                <p:outputPanel id="outputPanelSeleccionarRol" 
+                               style="text-align:center; width: 430px; align-content: center; ">
+                    
+                    <h:panelGrid  columns="1" cellpadding="2" style="text-align: center;">
+                        <f:facet name="header">
+                            <p:messages id="msgs"/>
+                        </f:facet>
+                        <p:outputLabel for="selectOneMenuSeleccionarRol" value="Seleccione el Rol con el que Desea Ingresar: "/>
+                        <ace:selectMenu id="selectOneMenuSeleccionarRol" style="width:155px"     
+                                         required="true" requiredMessage="Seleccione un Rol"
+                                         value="#{usuariorolControl.nombreRolSeleccionado}">
+                            
+                            <f:selectItem itemLabel="Seleccione un Rol" itemValue="" 
+                                          noSelectionOption="true" />
+                            <f:selectItems var="usurol" value="#{usuariorolControl.rolesDelUsuario}"
+                                           itemLabel="#{usurol.rol.rolNombre}" itemValue="#{usurol.rol.rolNombre}"/>
+                            
+                            <ace:ajax listener="#{usuariorolControl.actualizaRolSeleccionado}" event="change"/>
+                        </ace:selectMenu>
+
+                        <f:facet name="footer">
+                            <p:separator/>
+                            <p:commandButton value="Continuar" icon="ui-icon-arrowthick-1-e ui-icon-home" 
+                                             id="btnContinuarSesion"
+                                             style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                                             process="@this,selectOneMenuSeleccionarRol" 
+                                             update=":formSeleccionarRol:msgs"
+                                             action="#{usuariorolControl.cargarInicio()}"/>
+                            <p:commandButton value="Cerrar Sesion" icon="ui-icon-close" 
+                                             id="btnCancelarContinuarSesion" 
+                                             style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                                             process="@this"
+                                             actionListener="#{loginControl.cerrarSesion()}"/>
+                        </f:facet>
+                    </h:panelGrid>
+                    
+                </p:outputPanel>
+            </ace:dialog>
+            <p:remoteCommand name="remoteCommandCargarRoles" autoRun="true" 
+                             oncomplete="PF('dialogSeleccionarRol').show()"/>
+        </h:form>
+    </h:body>
+</html>
+
+
+

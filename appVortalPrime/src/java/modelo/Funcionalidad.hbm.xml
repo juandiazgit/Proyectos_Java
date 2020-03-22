@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 8/11/2017 03:24:53 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="modelo.Funcionalidad" table="funcionalidad" schema="vortal" optimistic-lock="version">
+        <id name="funId" type="string">
+            <column name="fun_id" length="24" />
+            <generator class="assigned" />
+        </id>
+        <property name="funNombre" type="string">
+            <column name="fun_nombre" length="124" not-null="true" />
+        </property>
+        <property name="funDescripcion" type="string">
+            <column name="fun_descripcion" length="224" not-null="true" />
+        </property>
+        <property name="funActiva" type="boolean">
+            <column name="fun_activa" not-null="true" />
+        </property>
+        <property name="funUrl" type="string">
+            <column name="fun_url" length="224" />
+        </property>
+        <property name="funPadre" type="string">
+            <column name="fun_padre" length="24" />
+        </property>
+        <property name="funTerminal" type="boolean">
+            <column name="fun_terminal" not-null="true" />
+        </property>
+        <set name="rolfuncionalidads" table="rolfuncionalidad" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="fun_id" length="24" not-null="true" />
+            </key>
+            <one-to-many class="modelo.Rolfuncionalidad" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:body>
+        <div id="cabecera" class="ui-state-active ui-corner-top"> 
+            <div id="cabIzq"> <h2> Administrador Vortal </h2> </div>
+            <div id="cabDer"> <h2> Bienvenido #{loginControl.usuario.usuNombre} </h2> </div>
+        </div>
+        <div id="menubar">
+            <h:form>     
+                <p:growl id="messages" showDetail="true"/>
+
+                <p:toolbar style="height: 25px; text-align: center;" class="ui-state-active ui-corner-buttom">
+                    <f:facet name="left">
+                        <div style="float: left; ">
+                            <p:outputLabel value="Cambiar Rol:  " style="font-weight: bold; font-size: 16px;"/> 
+                        </div>
+                        <p:selectOneMenu id="selectOneMenuSeleccionarRol" style="width:130px" 
+                                         required="true" requiredMessage="Debe Seleccionar un Rol"
+                                         value="#{usuariorolControl.nombreRolSeleccionado}">
+                            <f:selectItems var="usurol" value="#{usuariorolControl.rolesDelUsuario}"  
+                                           itemLabel="#{usurol.rol.rolNombre}" itemValue="#{usurol.rol.rolNombre}" />
+                            <p:ajax event="change" listener="#{usuariorolControl.actualizaRolSeleccionado}"
+                                    oncomplete="rcActualizaRolSeleccionado(),rcLimpiarPestanas()"/>
+                        </p:selectOneMenu>
+                    </f:facet>
+
+                    <f:facet name="right">                        
+                        <div style="float: left; text-align: center">
+                            <div style="float: left"><p:outputLabel for="advanced" value="Seleccionar Tema: " style="font-weight: bold; font-size: 16px;"/></div>                  
+                            <p:themeSwitcher id="advanced" style="width:100px" effect="fade" var="t">                                
+                                <f:selectItems  value="#{themeSwitcherControl.themes}" var="theme" itemLabel="#{theme.displayName}" itemValue="#{theme.name}"/>
+                                <p:ajax event="change" listener="#{themeSwitcherControl.actualizaTema(theme.name)}"/>
+                                <p:column>
+                                    <h:outputText styleClass="ui-theme ui-theme-" style="display-block" />
+                                </p:column>
+                            </p:themeSwitcher>
+                        </div>
+                        <span class="ui-separator">
+                            <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                        </span> 
+
+                        <p:commandButton type="button" title="Save" icon="ui-icon-disk" />
+                        <span class="ui-separator">
+                            <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                        </span> 
+                        <p:commandButton type="button" title="Delete" icon="ui-icon-trash" />
+                        <span class="ui-separator">
+                            <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                        </span>
+                        <p:commandButton type="button" title="Print" icon="ui-icon-print" />
+                        <span class="ui-separator">
+                            <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                        </span>
+                        <p:menuButton value="Optiones de Usuario">
+                            <p:menuitem value="opcion 1" actionListener="#{toolbarView.save}" update="messages" 
+                                        icon="ui-icon-arrowrefresh-1-w" style="color: #000000"/>
+                            <p:menuitem value="opcion 2" actionListener="#{toolbarView.update}" update="messages" 
+                                        icon="ui-icon-arrowrefresh-1-w" style="color: #000000"/>
+                            <p:menuitem value="opcion 3" actionListener="#{toolbarView.delete}" ajax="false" 
+                                        icon="ui-icon-arrowrefresh-1-w" style="color: #000000"/>
+                            <p:menuitem value="Cerrar sesión" action="#{loginControl.cerrarSesion()}" 
+                                        icon="ui-icon-close" style="color: #000000"/>
+                        </p:menuButton>     
+                    </f:facet>
+
+                </p:toolbar>
+
+                <p:remoteCommand name="rcActualizaRolSeleccionado" actionListener="#{panelMenuControl.crearMenu()}"
+                                 update=":formMenuGeneral" />
+                <p:remoteCommand name="rcLimpiarPestanas" actionListener="#{tabsControl.limpiarTabs()}"
+                                 update=":formPestanas:tabViewFunc" />
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

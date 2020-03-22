@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+              <p:growl id="msgs" showDetail="true"/>
+                <h:form id="formPestanas">   
+                    <p:tabView id="tabViewFunc" activeIndex="#{tabsControl.activeIndex}" 
+                               cache="false" orientation="top" scrollable="true"> 
+                        <p:tab title="Inicio" closable="false" id="inicio" >
+                            <p:scrollPanel style="width: 890px;height: 720px;border: none;" 
+                                            mode="native" >
+                                    <ui:include src="funcionalidad/contInicio.xhtml"/> 
+                            </p:scrollPanel>
+                        </p:tab>
+                        <c:forEach items="#{tabsControl.tabs}" var="tab">
+                            <p:tab id="tabFunc_#{tab.funId}" title="#{tab.funNombre}" closable="true">
+                                    <ui:include src="/vistas/funcionalidad/#{tab.funUrl}.xhtml"/>
+                            </p:tab> 
+                        </c:forEach>
+                        <p:ajax event="tabClose" listener="#{tabsControl.onTabCloseAction}" 
+                                update=":formPestanas:tabViewFunc"/>
+                        <p:ajax event="tabChange" listener="#{tabsControl.onTabChangeAction}"/>
+                    </p:tabView> 
+                </h:form>             
+    </body>
+</html>

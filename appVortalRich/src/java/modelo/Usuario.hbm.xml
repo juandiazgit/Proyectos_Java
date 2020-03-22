@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 8/11/2017 03:24:53 PM by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="modelo.Usuario" table="usuario" schema="vortal" optimistic-lock="version">
+        <id name="usuDocumento" type="string">
+            <column name="usu_documento" length="24" />
+            <generator class="assigned" />
+        </id>
+        <property name="usuNombre" type="string">
+            <column name="usu_nombre" length="124" not-null="true" />
+        </property>
+        <property name="usuUsuario" type="string">
+            <column name="usu_usuario" length="124" not-null="true" unique="true" />
+        </property>
+        <property name="usuClave" type="string">
+            <column name="usu_clave" length="124" not-null="true" />
+        </property>
+        <property name="usuCorreo" type="string">
+            <column name="usu_correo" length="124" not-null="true" />
+        </property>
+        <property name="usuFecharegistro" type="timestamp">
+            <column name="usu_fecharegistro" length="22" not-null="true" />
+        </property>
+        <property name="usuPreguntaregistro" type="string">
+            <column name="usu_preguntaregistro" length="224" not-null="true" />
+        </property>
+        <property name="usuRespuestapregunta" type="string">
+            <column name="usu_respuestapregunta" length="224" not-null="true" />
+        </property>
+        <property name="usuTema" type="string">
+            <column name="usu_tema" length="100" />
+        </property>
+        <set name="usuariorols" table="usuariorol" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="usu_id" length="24" not-null="true" />
+            </key>
+            <one-to-many class="modelo.Usuariorol" />
+        </set>
+    </class>
+</hibernate-mapping>

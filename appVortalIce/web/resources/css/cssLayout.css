@@ -1,0 +1,105 @@
+#cabecera{
+    position: relative;
+    height: 50px;
+    margin: 0px 0px 0px 0px;
+    color: blue;
+}#cabIzq{
+    position: relative;
+    height: auto;
+    margin: 0px 0px 0px 0px;
+    width: 50%;
+    float: left;
+    color: #ECF3FD;
+}#cabDer{
+    position: static;
+    height: auto;
+    margin: 0px 0px 0px 0px;
+    width: 50%;
+    float: right;
+    font-family: initial;
+    color: #ECF3FD  ;
+}
+#admVortal{
+    position: relative;
+    height: 50px;
+    
+    width: 400px;
+    margin: 0px 0px 0px 30px;
+}
+#top {
+    position: relative;
+    
+    color: white;
+    padding: 5px;
+    margin: 0px 0px 0px 0px;
+    height: auto;
+    text-align: center;
+}
+#btnInicio{
+    width: 350px;
+    
+}
+#bottom {
+    position: relative;
+    
+    padding: 5px;
+    margin: 10px 0px 0px 0px;
+}
+#menu_contenido{
+  height: 790px;  
+}
+#left {
+    float: left;
+    
+    padding: 5px;
+    position: relative;
+    margin-top: 0px;
+    width: 24%;
+    height: 100%;
+}
+
+#right {
+    
+}
+#content{
+    position: relative;
+    
+    padding: 5px;
+    height: auto;
+    float: right;
+    width: 74.3%;
+    margin-top: 0px;
+    height: 100%;
+    
+}
+#item{
+    position: relative;
+    background-color: #dddddd;
+    padding: 5px;
+}
+
+.center_content {
+    
+}
+
+.left_content {
+    
+}
+
+.right_content {
+    
+}
+
+#top a:link, #top a:visited {
+  
+  font-weight : bold;
+  text-decoration: none;
+}
+
+#top a:link:hover, #top a:visited:hover  {
+  
+  font-weight : bold;
+  text-decoration : underline;
+}
+
+

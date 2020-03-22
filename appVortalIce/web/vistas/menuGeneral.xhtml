@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+
+    </h:head>
+    <h:body>
+        <h:form id="formMenuGeneral">    
+            <ace:panel>
+                <h1 style="color: #AFAFAF; background-color: #dddddd" align="center" >Menú de Funcionalidades</h1>
+                <ace:menu type="plain" id="menuIce1">
+                    <ace:submenu label="Administrador de vortal" value="hhh">
+                    </ace:submenu>
+                    <ace:submenu id="subMenu1" label="Control de Roles a Usuarios" value="x">
+                        <ace:menuItem id="item1" value="Roles a Usuarios" 
+                                      actionListener="#{tabsControl.agregarNewTab('1_1_1')}">
+                            <ace:ajax event="activate" execute="@this" />
+                        </ace:menuItem>                        
+                    </ace:submenu>
+                    <ace:submenu id="subMenu2" label="Control de Funcionalidades a Roles" value="y">
+                        <ace:menuItem value="Asignar Funcionalidades a Roles" action="#{tabsControl.agregarNewTab('1_2_1')}"/>
+                        <ace:menuItem value="Eliminar Funcionalidades a Roles" action="#{tabsControl.agregarNewTab('1_2_2')}"/>
+                    </ace:submenu>
+
+                </ace:menu>
+            </ace:panel>
+            <!--p:outputPanel>
+                <h1 style="color: lightgreen; background-color: dimgray" align="center" >Menú de Funcionalidades</h1>
+                <p:panelMenu model="# {panelMenuControl.menuModel}" style="width:320px">         
+                </p:panelMenu>
+            </p:outputPanel-->           
+        </h:form>
+    </h:body>
+</html>

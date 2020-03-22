@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <h:body>
+        <div id="cabecera" class="ui-state-active ui-corner-top"> 
+            <div id="cabIzq"> <h2> Administrador Vortal </h2> </div>
+            <div id="cabDer"> <h2> Bienvenido #{loginControl.usuario.usuNombre} </h2> </div>
+        </div>
+        <div id="menubar">
+            <h:form>     
+                <p:growl id="messages" showDetail="true"/>
+
+                <rich:toolbar style="height: 25px; text-align: center;" class="ui-state-active ui-corner-buttom">
+
+                    <div style="float: left; ">
+                        <p:outputLabel value="Cambiar Rol:  " style="font-weight: bold; font-size: 16px;"/> 
+                    </div>
+                    <rich:select id="selectOneMenuSeleccionarRol" style="width:130px" 
+                                 required="true" requiredMessage="Debe Seleccionar un Rol"
+                                 value="#{usuariorolControl.nombreRolSeleccionado}">
+                        <f:selectItems var="usurol" value="#{usuariorolControl.rolesDelUsuario}"  
+                                       itemLabel="#{usurol.rol.rolNombre}" itemValue="#{usurol.rol.rolNombre}" />
+                        <a4j:ajax event="change" listener="#{usuariorolControl.actualizaRolSeleccionado}"/>
+                    </rich:select>
+
+
+
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span> 
+                    
+                    <p:commandButton type="button" title="Save" icon="ui-icon-disk" />
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span> 
+                    <p:commandButton type="button" title="Delete" icon="ui-icon-trash" />
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+                    <p:commandButton type="button" title="Print" icon="ui-icon-print" />
+                    <span class="ui-separator">
+                        <span class="ui-icon ui-icon-grip-dotted-vertical" />
+                    </span>
+                    <rich:toolbarGroup location="right">
+                        <h:commandButton  action="#{loginControl.cerrarSesion()}" value="Cerrar sesión"/>
+                    </rich:toolbarGroup>     
+
+
+                </rich:toolbar>
+
+                <!--p:remoteCommand name="rcActualizaRolSeleccionado" actionListener="# {panelMenuControl.crearMenu()}"
+                                 update=":formMenuGeneral"/>
+                <p:remoteCommand name="rcLimpiarPestanas" actionListener="# {tabsControl.limpiarTabs()}"
+                                 update=":formPestanas:tabViewFunc" /-->
+            </h:form>
+        </div>
+    </h:body>
+</html>
+

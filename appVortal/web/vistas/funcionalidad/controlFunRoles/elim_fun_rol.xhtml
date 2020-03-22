@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Eliminar de Funcionalidades a Roles</title>
+    </h:head>
+    <h:body>
+        
+        <p:outputPanel id="outputPanelBusqueda_e" style="text-align: center; align-content: center; animation: alternate;">
+            <p:outputLabel value="Buscar Rol: "/>
+            <p:inputText id="inputTextBuscarRol_e" value="#{rolControl.busqueda}" 
+                         placeholder="Ingrese Nombre o Descripción" style="width: 260px;"/>
+            <p:commandButton id="btnBuscarRol_e" value="" icon="ui-icon-search" 
+                             style="width: 40px; height: 27px; text-align: center; font-weight: bold"
+                             actionListener="#{rolControl.buscarRoles()}"
+                             update=":formPestanas:tabViewFunc:dataTableRoles_e"/>
+            <p:separator/> 
+        </p:outputPanel>
+
+        <p:outputPanel id="outputPanelDataTableRoles_e" style="width: 100%; text-align: center; align-content: center; animation: alternate;" deferredMode="visible">
+            <p:dataTable var="rl" value="#{rolControl.listaRoles}" rows="10" widgetVar="widgetDataTableRoles_e"
+                         paginator="true" id="dataTableRoles_e" rowKey="#{rl.rolId}" style=""
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                         {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                         rowsPerPageTemplate="5,10,15,20,25,30" emptyMessage="No hay datos para mostrar"
+                         selectionMode="single" selection="#{rolControl.rolSeleccionado}">
+                <f:facet name="header">
+                    <p:outputPanel>
+                        <h:outputText value="ROLES" />
+                    </p:outputPanel>    
+                </f:facet>
+                <p:column headerText="ID"
+                          style="width: 10%;">
+                    <h:outputText value="#{rl.rolId}" />
+                </p:column>            
+                <p:column headerText="Nombre"
+                          style="width: 18%;">
+                    <h:outputText value="#{rl.rolNombre}" />
+                </p:column>
+                <p:column headerText="Descripción" 
+                          style="width: 18%;">
+                    <h:outputText value="#{rl.rolDescripcion}" />
+                </p:column> 
+                <p:ajax  event="rowSelect"
+                         listener="#{funcionalidadDualListControl.funcionalidadesEliminarRol(rolControl.rolSeleccionado)}"
+                         update=":formPestanas:tabViewFunc:pgrid_e"/>
+
+            </p:dataTable>
+            <p:separator/>
+        </p:outputPanel>   
+        
+        <p:separator/>
+
+        <div id="dvEliminarFuncionalidadRol" style="margin-left: 24%; display: none">
+            <p:panelGrid id="pgrid_e" style="margin-top:20px; size: 100%">
+                <f:facet name="header">
+                    <p:row>
+                        <p:column colspan="2">Datos del Rol</p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="width: 50%">Nombre</p:column>
+                        <p:column style="width: 50%">ID</p:column>                     
+                    </p:row>
+                </f:facet>
+                <p:row>                
+                    <p:column style="font-weight: bold; text-align: center">#{rolControl.rolSeleccionado.rolNombre}</p:column>
+                    <p:column style="font-weight: bold; text-align: center">#{rolControl.rolSeleccionado.rolId}</p:column>
+                </p:row>
+                <p:row>                
+                    <p:column colspan="4" styleClass="ui-widget-header" style="text-align: center">Eliminar Funcionalidades</p:column>
+                </p:row> 
+                <p:row>
+                    <p:column colspan="2">
+                        <p:pickList id="plEliminarFuncionalidades" value="#{funcionalidadDualListControl.dualListE}" var="funcionalidad" 
+                                    itemLabel="#{funcionalidad.funId} #{funcionalidad.funNombre}" itemValue="#{funcionalidad.funNombre}">
+                            <f:facet name="sourceCaption">Funcionalidades Asignadas</f:facet>
+                            <f:facet name="targetCaption">Funcionalidades a Eliminar</f:facet>
+                        </p:pickList>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column colspan="2" style="text-align: center">
+                        <p:separator/>
+                        <p:commandButton id="btnEliminarFuncionalidades" value="Eliminar" icon="ui-icon-check" 
+                                         style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                                         actionListener="#{rolfuncionalidadControl.verificarFuncionalidadesRol(
+                                                           funcionalidadDualListControl.dualListE.target, rolControl.rolSeleccionado,2,funcionalidadDualListControl.dualListE.target)}"/>
+
+                        <p:commandButton value="Cancelar" icon="ui-icon-close" id="btnCerrarEliminarFuncionalidades"  
+                                         style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                                         onclick="ocultar_e()"
+                                         process="@this"/>
+                    </p:column>
+                </p:row>                
+            </p:panelGrid>
+        </div> 
+
+        <p:confirmDialog id="cdEliminarFuncionalidadesRol" header="Eliminar Funcionalidades al Rol" 
+                         widgetVar="cdwvEliminarFuncionalidadesRol" showEffect="fade"
+                         message="Está Seguro que desea Eliminar las Funcionalidades del Rol"
+                         hideEffect="explode" severity="alert">
+            <p:commandButton value="Aceptar" icon="ui-icon-disc"  
+                             style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                             actionListener="#{rolfuncionalidadControl.eliminarFuncionalidadesRol(
+                                               funcionalidadDualListControl.dualListE.target, rolControl.rolSeleccionado)}"
+                             onclick="ocultar_e()"
+                             process="@this"/>
+            <p:commandButton value="Cancelar" icon="ui-icon-close"  
+                             style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                             onclick="PF('cdwvEliminarFuncionalidadesRol').hide()"
+                             process="@this"/>
+        </p:confirmDialog>
+
+        <p:confirmDialog id="cdExitoEliminarFuncionalidadesRol" header="Eliminación Exitosa" 
+                         widgetVar="cdwvExitoEliminarFuncionalidadesRol" showEffect="fade"
+                         message="Funcionalidades Eliminadas al Rol Exitosamente"
+                         hideEffect="explode" severity="alert">
+            <p:commandButton value="Aceptar" icon="ui-icon-close"                             
+                             style="width: 150px; height: 30px; text-align: center; font-weight: bold; margin-left: 24%"
+                             onclick="PF('cdwvExitoEliminarFuncionalidadRol').hide()"
+                             process="@this"/>
+        </p:confirmDialog>
+
+        <p:confirmDialog id="cdSeleccioneFuncionalidadesRol_e" header="No ha Asignado al Rol Funcionalidades para Eliminar" 
+                         widgetVar="cdwvSeleccioneFuncionalidadesRol_e" showEffect="fade"
+                         message="Debe Agregar al menos una Funcionalidad para Eliminar"
+                         hideEffect="explode" severity="alert">
+            <p:commandButton value="Aceptar" icon="ui-icon-close"  
+                             style="width: 150px; height: 30px; text-align: center; font-weight: bold; margin-left: 24%"
+                             onclick="PF('cdwvSeleccioneFuncionalidadesRol_e').hide()"/>
+        </p:confirmDialog>
+
+        <div id="dvNoAsignadoFuncionalidadesRol" style="margin-left: 24%; display: none">
+            <p:panelGrid id="pgridA" style="margin-top:20px; size: 100%">
+                <f:facet name="header">
+                    <p:row>
+                        <p:column colspan="2">No tiene Funcionalidades Asignadas</p:column>
+                    </p:row>
+                </f:facet>
+                <p:row>                
+                    <p:column style="font-weight: bold; text-align: center; color: yellow">El Rol No tiene Funcionalidades Asignadas para Eliminarle</p:column>                    
+                </p:row>
+                <p:row>
+                    <p:column colspan="2" style="text-align: center">                        
+                        <p:commandButton value="Aceptar" icon="ui-icon-close" id="btnCerrarNoEliminarRoles"  
+                                         style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                                         onclick="ocultarNFE()"
+                                         process="@this"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </div>
+        
+        <p:confirmDialog id="cdNoPuedeEliminarFuncionalidadesRol" header="No se pueden Eliminar las Funcionalidades al Rol" 
+                         widgetVar="cdwvcdNoPuedeEliminarFuncionalidadesRol" showEffect="fade"
+                         message="No se puede Eliminar el Bloque de Funcionalidades porque la Funcionalidad o Algunas de ellas
+                                  tiene Nodos Asociados"
+                         hideEffect="explode" severity="alert" closable="false">
+            <p:commandButton value="Aceptar" icon="ui-icon-close"  
+                             style="width: 150px; height: 30px; text-align: center; font-weight: bold; margin-left: 35%"
+                             onclick="PF('cdwvcdNoPuedeEliminarFuncionalidadesRol').hide()"/>
+        </p:confirmDialog>
+        
+        <script type="text/javascript">
+            function mostrar_e() {
+                document.getElementById('dvEliminarFuncionalidadRol').style.display = 'block';
+            }
+            function ocultar_e() {
+                document.getElementById('dvEliminarFuncionalidadRol').style.display = 'none';
+            }
+            
+            function mostrarNFE() {
+                document.getElementById('dvNoAsignadoFuncionalidadesRol').style.display = 'block';
+            }
+            function ocultarNFE() {
+                document.getElementById('dvNoAsignadoFuncionalidadesRol').style.display = 'none';
+            }
+        </script>
+    </h:body>   
+</html>
+
+

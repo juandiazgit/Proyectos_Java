@@ -1,0 +1,175 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Eliminar Roles a Usuarios</title>
+    </h:head>
+    <h:body>
+        
+        <p:outputPanel id="outputPanelBusqueda_e" style="text-align: center; align-content: center; animation: alternate;">
+            <p:outputLabel value="Buscar usuario: "/>
+            <p:inputText id="inputTextBuscarUsuario_e" value="#{usuarioControl.busqueda}" 
+                         placeholder="Ingrese Documento, Nombre o Usuario" style="width: 260px;"/>
+            <p:commandButton id="btnBuscarUsuario_e" value="" icon="ui-icon-search" 
+                             style="width: 40px; height: 27px; text-align: center; font-weight: bold"
+                             actionListener="#{usuarioControl.buscarUsuarios()}"
+                             update=":formPestanas:tabViewFunc:dataTableUsuarios_e"/>
+            <p:separator/> 
+        </p:outputPanel>
+
+        <p:outputPanel id="outputPanelDataTableUsuarios_e" style="width: 100%; text-align: center; align-content: center; animation: alternate;" deferredMode="visible">
+            <p:dataTable var="usu" value="#{usuarioControl.listaUsuarios}" rows="10" widgetVar="widgetDataTableUsuarios_e"
+                         paginator="true" id="dataTableUsuarios_e" rowKey="#{usu.usuDocumento}" style=""
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} 
+                         {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                         rowsPerPageTemplate="5,10,15,20,25,30" emptyMessage="No hay datos para mostrar"
+                         selectionMode="single" selection="#{usuarioControl.usuarioSeleccionado}">
+                <f:facet name="header">
+                    <p:outputPanel>
+                        <h:outputText value="USUARIOS" />
+                    </p:outputPanel>    
+                </f:facet>
+                <p:column headerText="Documento"
+                          style="width: 10%;">
+                    <h:outputText value="#{usu.usuDocumento}" />
+                </p:column>            
+                <p:column headerText="Nombre"
+                          style="width: 18%;">
+                    <h:outputText value="#{usu.usuNombre}" />
+                </p:column>
+                <p:column headerText="Usuario" 
+                          style="width: 18%;">
+                    <h:outputText value="#{usu.usuUsuario}" />
+                </p:column>  
+                <p:ajax  event="rowSelect"
+                         listener="#{rolDualListControl.rolesEliminarUsuario(usuarioControl.usuarioSeleccionado)}"
+                         update=":formPestanas:tabViewFunc:pgrid_e"/>
+
+            </p:dataTable>
+            <p:separator/>
+        </p:outputPanel>   
+        
+        <p:separator/>
+
+        <div id="dvEliminarRolUsuario" style="margin-left: 24%; display: none">
+            <p:panelGrid id="pgrid_e" style="margin-top:20px; size: 100%">
+                <f:facet name="header">
+                    <p:row>
+                        <p:column colspan="2">Datos del Usuario</p:column>
+                    </p:row>
+                    <p:row>
+                        <p:column style="width: 50%">Nombre</p:column>
+                        <p:column style="width: 50%">Documento</p:column>                    
+                    </p:row>
+                </f:facet>
+                <p:row>                
+                    <p:column style="font-weight: bold; text-align: center">#{usuarioControl.usuarioSeleccionado.usuNombre}</p:column>
+                    <p:column style="font-weight: bold; text-align: center">#{usuarioControl.usuarioSeleccionado.usuDocumento}</p:column>
+                </p:row>
+                <p:row>                
+                    <p:column colspan="4" styleClass="ui-widget-header" style="text-align: center">Eliminar Roles</p:column>
+                </p:row> 
+                <p:row>
+                    <p:column colspan="2">
+                        <p:pickList id="plEliminarRoles" value="#{rolDualListControl.dualListE}" var="rol" 
+                                    itemLabel="#{rol.rolNombre}" itemValue="#{rol.rolNombre}">
+                            <f:facet name="sourceCaption">Roles Asignados</f:facet>
+                            <f:facet name="targetCaption">Roles a Eliminar</f:facet>
+                        </p:pickList>
+                    </p:column>
+                </p:row>
+                <p:row>
+                    <p:column colspan="2" style="text-align: center">
+                        <p:separator/>
+                        <p:commandButton id="btnEliminarRoles" value="Eliminar" icon="ui-icon-check" 
+                                         style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                                         actionListener="#{usuariorolControl.verificarRolesUsuario(
+                                                           rolDualListControl.dualListE.target, usuarioControl.usuarioSeleccionado,2)}"/>
+
+                        <p:commandButton value="Cancelar" icon="ui-icon-close" id="btnCerrarEliminarRoles"  
+                                         style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                                         onclick="ocultar_e()"
+                                         process="@this"/>
+                    </p:column>
+                </p:row>                
+            </p:panelGrid>
+        </div> 
+
+        <p:confirmDialog id="cdEliminarRolesUsuario" header="Eliminar Roles al Usuario" 
+                         widgetVar="cdwvEliminarRolesUsuario" showEffect="fade"
+                         message="Está Seguro que desea Eliminar los Roles del Usuario"
+                         hideEffect="explode" severity="alert">
+            <p:commandButton value="Aceptar" icon="ui-icon-disc"  
+                             style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                             actionListener="#{usuariorolControl.eliminarRolesUsuario(
+                                               rolDualListControl.dualListE.target, usuarioControl.usuarioSeleccionado)}"
+                             onclick="ocultar_e()"
+                             process="@this"/>
+            <p:commandButton value="Cancelar" icon="ui-icon-close"  
+                             style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                             onclick="PF('cdwvEliminarRolesUsuario').hide()"
+                             process="@this"/>
+        </p:confirmDialog>
+
+        <p:confirmDialog id="cdExitoEliminarRolesUsuario" header="Eliminación Exitosa" 
+                         widgetVar="cdwvExitoEliminarRolesUsuario" showEffect="fade"
+                         message="Roles Eliminados al Usuario Exitosamente"
+                         hideEffect="explode" severity="alert">
+            <p:commandButton value="Aceptar" icon="ui-icon-close"                             
+                             style="width: 150px; height: 30px; text-align: center; font-weight: bold; margin-left: 24%"
+                             onclick="PF('cdwvExitoEliminarRolesUsuario').hide()"
+                             process="@this"/>
+        </p:confirmDialog>
+
+        <p:confirmDialog id="cdSeleccioneRolesUsuario_e" header="No Ha Asignado al Usuario Roles para Eliminar" 
+                         widgetVar="cdwvSeleccioneRolesUsuario_e" showEffect="fade"
+                         message="Debe Agregar al Usuario al menos un Rol para Eliminar"
+                         hideEffect="explode" severity="alert">
+            <p:commandButton value="Aceptar" icon="ui-icon-close"  
+                             style="width: 150px; height: 30px; text-align: center; font-weight: bold; margin-left: 24%"
+                             onclick="PF('cdwvSeleccioneRolesUsuario_e').hide()"/>
+        </p:confirmDialog>
+
+        <div id="dvNoAsignadoRolesUsuario" style="margin-left: 24%; display: none">
+            <p:panelGrid id="pgridA" style="margin-top:20px; size: 100%">
+                <f:facet name="header">
+                    <p:row>
+                        <p:column colspan="2">No tiene Roles Asignados</p:column>
+                    </p:row>
+                </f:facet>
+                <p:row>                
+                    <p:column style="font-weight: bold; text-align: center; color: #D20005">El Usuario No tiene Roles Asignados para Eliminarle</p:column>                    
+                </p:row>
+                <p:row>
+                    <p:column colspan="2" style="text-align: center">                        
+                        <p:commandButton value="Aceptar" icon="ui-icon-close" id="btnCerrarNoAsignarRoles"  
+                                         style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                                         onclick="ocultarNRE()"
+                                         process="@this"/>
+                    </p:column>
+                </p:row>
+            </p:panelGrid>
+        </div>
+        <script type="text/javascript">
+            function mostrar_e() {
+                document.getElementById('dvEliminarRolUsuario').style.display = 'block';
+            }
+            function ocultar_e() {
+                document.getElementById('dvEliminarRolUsuario').style.display = 'none';
+            }
+            
+            function mostrarNRE() {
+                document.getElementById('dvNoAsignadoRolesUsuario').style.display = 'block';
+            }
+            function ocultarNRE() {
+                document.getElementById('dvNoAsignadoRolesUsuario').style.display = 'none';
+            }
+        </script>
+    </h:body>   
+</html>
+
+

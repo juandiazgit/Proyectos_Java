@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+
+    </h:head>
+    <h:body>
+        <h:form id="formMenuGeneral">            
+            <!--p:outputPanel>
+                <h1 style="color: lightgreen; background-color: dimgray" align="center" >Menú de Funcionalidades</h1>
+                <p:panelMenu model="# {panelMenuControl.menuModel}" style="width:320px">         
+                </p:panelMenu>
+            </p:outputPanel-->
+
+            <h:panelGrid columns="2" columnClasses="cols,cols" width="400">                
+
+                <rich:panelMenu style="width:300px" itemMode="ajax" groupMode="ajax" groupExpandedLeftIcon="triangleUp"
+                                groupCollapsedLeftIcon="triangleDown" topGroupExpandedRightIcon="chevronUp"
+                                topGroupCollapsedRightIcon="chevronDown" itemLeftIcon="disc" >
+                    <rich:panelMenuGroup label="Administrador de vortal">
+                        <rich:panelMenuGroup label="Control Roles a Usuarios">
+                            <rich:panelMenuItem label="Roles a Usuarios" name="Item_1_1" actionListener="#{tabsControl.agregarNewTab('1_1_1')}" />                            
+                        </rich:panelMenuGroup>
+                        <rich:panelMenuGroup label="Control Funcionalidades a Roles">
+                            <rich:panelMenuItem label="Asignar Funcionalidades a Roles" name="Item_2_1" actionListener="#{tabsControl.agregarNewTab('1_2_1')}"/>
+                            <rich:panelMenuItem label="Eliminar Funcionalidades a Roles" name="Item_2_2" actionListener="#{tabsControl.agregarNewTab('1_2_2')}"/>
+                        </rich:panelMenuGroup>
+                    </rich:panelMenuGroup>
+                </rich:panelMenu>
+                <a4j:outputPanel ajaxRendered="true">
+                    <rich:panel rendered="#{not empty panelMenuBean.current}">
+                        <h:outputText value="#{panelMenuBean.current} selected" id="current" />
+                    </rich:panel>
+                </a4j:outputPanel>
+            </h:panelGrid>
+        </h:form>
+    </h:body>
+</html>

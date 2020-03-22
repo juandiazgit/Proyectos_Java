@@ -1,0 +1,135 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ace="http://www.icefaces.org/icefaces/components"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+    <h:head>
+        <title>Inicio</title>
+    </h:head>
+
+    <!--<center>
+    <h2>UNIVERSIDAD DE PAMPLONA</h2>
+    </center>
+    <p:graphicImage style="align-content: flex-end " height="400" width="800" url="http://www.unipamplona.edu.co/unipamplona/portalIG/home_14/recursos/plataforma_2013/imagenes/28052013/ciadti_logo.png"/>-->      
+
+    <ace:panel id="outputPanelBusqueda" style="text-align: center; align-content: center; animation: alternate;">
+        <p:outputLabel value="Buscar usuario: "/>
+        <p:inputText id="inputTextBuscarUsuario" value="#{usuarioControl.busqueda}" 
+                     placeholder="Ingrese Documento, Nombre o Usuario" style="width: 260px;"/>
+        <p:commandButton id="btnBuscarUsuario" value="" icon="ui-icon-search" 
+                         style="width: 40px; height: 27px; text-align: center; font-weight: bold"
+                         actionListener="#{usuarioControl.buscarUsuarios()}"/>
+        <p:separator/> 
+    </ace:panel> 
+
+    <p:separator/>
+
+    <ace:panel>
+        <ace:dataTable id="selectionTable" 
+                       value="#{usuarioControl.listaUsuarios}" var="usud" rows="6" selectionMode="#{usuarioControl.usuarioSeleccionado}"
+                       paginator="true" paginatorPosition="bottom">
+
+            <ace:ajax event="select" render="@this form:status" execute="@this" />
+            <ace:ajax event="deselect" render="@this form:status" execute="@this" />
+
+            <ace:column id="id">
+                <f:facet name="header">
+                    Documento
+                </f:facet>
+                <h:outputText value="#{usud.usuDocumento}" />
+            </ace:column>
+            <ace:column id="name">
+                <f:facet name="header">
+                    Nombre
+                </f:facet>
+                <h:outputText value="#{usud.usuNombre}" />
+            </ace:column>
+            <ace:column id="usuario">
+                <f:facet name="header">
+                    Usuario
+                </f:facet>
+                <h:outputText value="#{usud.usuUsuario}"/>
+            </ace:column>
+        </ace:dataTable>
+    </ace:panel>
+
+
+    <h:panelGroup style="padding: 1.5em;" layout="block">
+        <style type="text/css">                    
+            .subList {
+                font-size: 100% !important;
+            }
+        </style>
+        <ui:param value="#{rolDualListControl}" name="backing" />
+        <ace:listControl id="dualListControl" style="width:45%; margin:0 auto 0 auto;">
+            <f:facet name="header">
+                Datos del Usuario<br/>
+                <p:separator/>
+                Sandra Lopez Sierra &nbsp;
+                1053635288
+            </f:facet>            
+            <f:facet name="footer">                
+                <p:column colspan="2" style="text-align: center">
+                    <p:separator/>
+                    <ace:pushButton id="btnAsignarRoles" value="Guardar"
+                                    style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                                    actionListener="#{usuariorolControl.verificarRolesUsuario(
+                                                      rolDualListControl.dualListAE.source, rolDualListControl.dualListAE.target, usuarioControl.usuarioSeleccionado)}"/>
+
+                    <ace:pushButton value="Cancelar" id="btnCerrarAsignarRoles"  
+                                    style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                                    onclick="ocultar()"/>
+                </p:column>                
+            </f:facet>
+
+            <ace:list id="firstList" value="#{rolDualListControl.rolesAsignadosStr}"
+                      styleClass="subList"
+                      dropGroup="textGroup"
+                      selectionMode="multiple" />
+
+            <ace:list id="secondList" value="#{rolDualListControl.rolesDisponiblesStr}"
+                      styleClass="subList"
+                      dropGroup="textGroup"
+                      selectionMode="multiple"  />
+        </ace:listControl>
+    </h:panelGroup>  
+
+    <p:confirmDialog id="cdAsignarRolesUsuario" header="Modificar Roles a Usuario" 
+                     widgetVar="cdwvAsignarRolesUsuario" showEffect="fade"
+                     message="Está Seguro que desea Guardar Cambios de Roles al Usuario"
+                     hideEffect="explode" severity="alert">
+        <p:commandButton value="Aceptar" icon="ui-icon-disc"  
+                         style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                         actionListener="#{usuariorolControl.asignarEliminarRolesUsuario(
+                                           rolDualListControl.dualListAE.source, rolDualListControl.dualListAE.target, usuarioControl.usuarioSeleccionado)}"
+                         onclick="ocultar()"
+                         process="@this"/>
+        <p:commandButton value="Cancelar" icon="ui-icon-close"  
+                         style="width: 150px; height: 30px; text-align: center; font-weight: bold"
+                         onclick="PF('cdwvAsignarRolesUsuario').hide()"
+                         process="@this"/>
+    </p:confirmDialog>
+
+    <p:confirmDialog id="cdExitoAsignarEliminarRolesUsuario" header="Cambios Exitosos" 
+                     widgetVar="cdwvExitoAsignarEliminarRolesUsuario" showEffect="fade"
+                     message="Se le han Asignado #{usuariorolControl.asignados} Rol y se le han Eliminado #{usuariorolControl.eliminados} al usuario #{usuarioControl.usuarioSeleccionado.usuNombre} "
+                     hideEffect="explode" severity="alert">
+        <p:commandButton value="Aceptar" icon="ui-icon-close"                             
+                         style="width: 150px; height: 30px; text-align: center; font-weight: bold; margin-left: 24%"
+                         onclick="PF('cdwvExitoAsignarEliminarRolesUsuario').hide()"
+                         process="@this"/>
+    </p:confirmDialog>
+
+    <p:confirmDialog id="cdSeleccioneRolesUsuario" header="No ha Asignado Roles al Usuario" 
+                     widgetVar="cdwvSeleccioneRolesUsuario" showEffect="fade"
+                     message="Debe Agregar al menos un Rol al Usuario para Guardar Cambios"
+                     hideEffect="explode" severity="alert">
+        <p:commandButton value="Aceptar" icon="ui-icon-close"  
+                         style="width: 150px; height: 30px; text-align: center; font-weight: bold; margin-left: 24%"
+                         onclick="PF('cdwvSeleccioneRolesUsuario').hide()"/>
+    </p:confirmDialog>  
+</html>
+
