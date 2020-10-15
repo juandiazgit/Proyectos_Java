@@ -5,6 +5,7 @@ import java.awt.geom.*;
 import javax.swing.*;
 
 import java.util.*;
+import java.util.List;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -48,13 +49,14 @@ class PelotaHilos implements Runnable{
 //			componente.paint(componente.getGraphics());
 			componente.repaint();
 			
-			/*try {
+			try {
 				Thread.sleep(4);
 			} catch (InterruptedException e) {
-				System.out.println("Hilo bloqueado. Imposible su interrupción");
+//				System.out.println("Hilo bloqueado. Imposible su interrupción");
 //				e.printStackTrace();
 //				System.exit(0);
-			}*/
+				Thread.currentThread().interrupt();
+			}
 		}
 		
 		System.out.println("Estado del hilo al terminar: "+Thread.currentThread().isInterrupted());
@@ -171,11 +173,13 @@ class MarcoRebote extends JFrame {
 	
 	private LaminaPelota lamina;
 	
-	private Thread t;
+	private Thread t1,t2,t3;
+	
+	private JButton boton;
 
 	public MarcoRebote() {
 
-		setBounds(600, 300, 400, 350);
+		setBounds(600, 300, 600, 350);
 
 		setTitle("Rebotes");
 
@@ -184,55 +188,23 @@ class MarcoRebote extends JFrame {
 		add(lamina, BorderLayout.CENTER);
 
 		JPanel laminaBotones = new JPanel();
-
-		ponerBoton(laminaBotones, "Dale!", new ActionListener() {
-
-			public void actionPerformed(ActionEvent evento) {
-
-				comienza_el_juego();
-			}
-
-		});
-
-		ponerBoton(laminaBotones, "Salir", new ActionListener() {
-
-			public void actionPerformed(ActionEvent evento) {
-
-				System.exit(0);
-
-			}
-
-		});
 		
-		//Dibuja el boton de Detener
-		ponerBoton(laminaBotones, "Detener", new ActionListener() {
-
-			public void actionPerformed(ActionEvent evento) {
-
-				detener();
-
-			}
-
-		});
-
+		//-------------------------------------------------------------
+		agregarBotones("Hilo1", laminaBotones);
+		agregarBotones("Hilo2", laminaBotones);
+		agregarBotones("Hilo3", laminaBotones);
+		//-------------------------------------------------------------
+		detenerHilo("Detener1", laminaBotones);
+		detenerHilo("Detener2", laminaBotones);
+		detenerHilo("Detener3", laminaBotones);
+		//-------------------------------------------------------------
+		
 		add(laminaBotones, BorderLayout.SOUTH);
-	}
-
-	// Ponemos botones
-
-	public void ponerBoton(Container c, String titulo, ActionListener oyente) {
-
-		JButton boton = new JButton(titulo);
-
-		c.add(boton);
-
-		boton.addActionListener(oyente);
-
 	}
 
 	// Añade pelota y la bota 1000 veces
 
-	public void comienza_el_juego() {
+	public void comienza_el_juego(ActionEvent e) {
 
 		Pelota pelota = new Pelota();
 
@@ -241,13 +213,27 @@ class MarcoRebote extends JFrame {
 		Runnable r = new PelotaHilos(pelota, lamina);
 		
 //		Thread t = new Thread(r);
-		t = new Thread(r);
 		
-		t.start();
+		if (e.getActionCommand().equals("Hilo1")) {
+			
+			t1 = new Thread(r);
+			t1.start();
+			
+		} else if (e.getActionCommand().equals("Hilo2")) {
+			
+			t2 = new Thread(r);
+			t2.start();
+			
+		} else if (e.getActionCommand().equals("Hilo3")) {
+			
+			t3 = new Thread(r);
+			t3.start();
+			
+		} 
 
 	}
 	
-	public void detener() {
+	public void detener(ActionEvent e) {
 		
 //		t.stop();
 		
@@ -256,7 +242,53 @@ class MarcoRebote extends JFrame {
 //			return;
 //		}
 		
-		t.interrupt();
+		if (e.getActionCommand().equals("Detener1")) {
+			
+			t1.interrupt();
+			
+		} else if (e.getActionCommand().equals("Detener2")) {
+			
+			t2.interrupt();
+			
+		} else if (e.getActionCommand().equals("Detener3")) {
+			
+			t3.interrupt();
+			
+		}
+		
+	}
+	
+	public void agregarBotones(String nombreHilo, JPanel laminaBotones) {
+		
+		boton = new JButton(nombreHilo);
+		boton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent evento) {
+				
+				comienza_el_juego(evento);
+				
+			}
+		});
+		
+		laminaBotones.add(boton);
+		
+	}
+	
+	public void detenerHilo(String nombreHilo, JPanel laminaBotones) {
+		
+		boton = new JButton(nombreHilo);
+		boton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent evento) {
+				
+				detener(evento);
+				
+			}
+		});
+		
+		laminaBotones.add(boton);
 		
 	}
 
